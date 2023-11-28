@@ -4,8 +4,9 @@ import com.assignments.customerservice.domain.Customer;
 import com.assignments.customerservice.domain.Location;
 import com.assignments.customerservice.dto.NewCustomerDto;
 import com.assignments.customerservice.dto.request.NewCustomerRequest;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CustomerMapper {
 
 
