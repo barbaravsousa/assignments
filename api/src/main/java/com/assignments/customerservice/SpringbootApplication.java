@@ -1,13 +1,13 @@
-package com.assignments.springbootproject;
+package com.assignments.customerservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringbootprojectApplication {
+public class SpringbootApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootprojectApplication.class, args);
+		SpringApplication.run(SpringbootApplication.class, args);
 	}
 
 }
