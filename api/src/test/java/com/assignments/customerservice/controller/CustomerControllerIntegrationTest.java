@@ -1,4 +1,4 @@
-package com.assignments.customerservice;
+package com.assignments.customerservice.controller;
 
 
 import org.junit.jupiter.api.Test;
