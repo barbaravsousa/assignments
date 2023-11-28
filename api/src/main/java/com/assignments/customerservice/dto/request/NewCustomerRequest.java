@@ -1,4 +1,4 @@
-package com.assignments.customerservice.dto;
+package com.assignments.customerservice.dto.request;
 
 
 import lombok.AllArgsConstructor;
