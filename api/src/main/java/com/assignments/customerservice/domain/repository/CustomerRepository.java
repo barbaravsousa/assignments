@@ -1,4 +1,4 @@
-package com.assignments.customerservice;
+package com.assignments.customerservice.domain.repository;
 
 import com.assignments.customerservice.domain.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
