@@ -7,7 +7,6 @@ import com.assignments.customerservice.domain.repository.LocationRepository;
 import com.assignments.customerservice.dto.NewCustomerDto;
 import com.assignments.customerservice.dto.mapper.CustomerMapper;
 import com.assignments.customerservice.dto.request.NewCustomerRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -15,16 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,9 +77,7 @@ public class CustomerControllerIntegrationTest {
         Customer customer = customerMapper.toCustomer(newCustomer);
         Location location = customerMapper.toLocation(newCustomer);
 
-        Set<Customer> customers = new HashSet<>();
         customer.setLocation(location);
-        location.setCustomers(customers);
 
         customerRepository.save(customer);
         locationRepository.save(location);
@@ -110,7 +103,6 @@ public class CustomerControllerIntegrationTest {
         assertEquals(newCustomer.getPostcode(), newCustomerDto.getPostcode());
 
     }
-
 
     @Test
     void getCustomer_NotFound() throws Exception {

@@ -7,6 +7,7 @@ import com.assignments.customerservice.domain.repository.LocationRepository;
 import com.assignments.customerservice.dto.NewCustomerDto;
 import com.assignments.customerservice.dto.request.NewCustomerRequest;
 import com.assignments.customerservice.dto.mapper.CustomerMapper;
+import com.assignments.customerservice.exception.CustomerAlreadyExistsException;
 import com.assignments.customerservice.exception.CustomerDoesNotExistException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -52,7 +51,7 @@ public class CustomerServiceUnitTest {
     CustomerMapper customerMapper;
 
     @Test
-    void addNewCustomer() throws CustomerDoesNotExistException {
+    void addNewCustomer() throws CustomerDoesNotExistException, CustomerAlreadyExistsException {
 
         Customer customer = new Customer();
         customer.setCustomerRef(customerRef);
@@ -60,20 +59,16 @@ public class CustomerServiceUnitTest {
         customer.setAddressLine1(addressLine1);
         customer.setAddressLine2(addressLine2);
 
-        Set<Customer> customers = new HashSet<>();
-        customers.add(customer);
-
         Location location = new Location();
         location.setTown(town);
         location.setCounty(county);
         location.setCountry(country);
         location.setPostcode(postcode);
 
+        customer.setLocation(location);
+
         when(customerMapper.toCustomer(newCustomerRequest)).thenReturn(customer);
         when(customerMapper.toLocation(newCustomerRequest)).thenReturn(location);
-
-        customer.setLocation(location);
-        location.setCustomers(customers);
 
         when(customerRepository.findByCustomerRef(customerRef)).thenReturn(customer);
 
@@ -83,9 +78,9 @@ public class CustomerServiceUnitTest {
 
         assertEquals(expectedNewCustomerDto, actualNewCustomerDto);
         verify(customerRepository, times(1)).save(customer);
-        verify(locationRepository, times(1)).save(location);
 
     }
+
 
     @Test
     void getCustomer() throws CustomerDoesNotExistException {
@@ -95,9 +90,6 @@ public class CustomerServiceUnitTest {
         customer.setAddressLine1(addressLine1);
         customer.setAddressLine2(addressLine2);
 
-        Set<Customer> customers = new HashSet<>();
-        customers.add(customer);
-
         Location location = new Location();
         location.setTown(town);
         location.setCounty(county);
@@ -105,7 +97,6 @@ public class CustomerServiceUnitTest {
         location.setPostcode(postcode);
 
         customer.setLocation(location);
-        location.setCustomers(customers);
 
         when(customerRepository.findByCustomerRef(customerRef)).thenReturn(customer);
 
