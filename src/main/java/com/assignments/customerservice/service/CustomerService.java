@@ -8,13 +8,12 @@ import com.assignments.customerservice.domain.repository.LocationRepository;
 import com.assignments.customerservice.dto.NewCustomerDto;
 import com.assignments.customerservice.dto.request.NewCustomerRequest;
 import com.assignments.customerservice.dto.mapper.CustomerMapper;
+import com.assignments.customerservice.exception.CustomerAlreadyExistsException;
 import com.assignments.customerservice.exception.CustomerDoesNotExistException;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -35,23 +34,38 @@ public class CustomerService {
      * @return the information about the saved customer.
      * @throws CustomerDoesNotExistException is thrown if there is a problem during the process of saving a customer in the database.
      */
-    @Transactional
-    public NewCustomerDto addNewCustomer(NewCustomerRequest newCustomerRequest) throws CustomerDoesNotExistException {
+    @Transactional(noRollbackFor = {DataIntegrityViolationException.class})
+    public NewCustomerDto addNewCustomer(NewCustomerRequest newCustomerRequest) throws CustomerDoesNotExistException, CustomerAlreadyExistsException {
         Customer customer = customerMapper.toCustomer(newCustomerRequest);
         Location location = customerMapper.toLocation(newCustomerRequest);
 
-        Set<Customer> customers = new HashSet<>();
-        customers.add(customer);
+        Location savedLocation = getOrCreateLocation(location);
 
-        customer.setLocation(location);
-        location.setCustomers(customers);
+        customer.setLocation(savedLocation);
 
-        customerRepository.save(customer);
-        locationRepository.save(location);
-
+        try {
+            customerRepository.save(customer);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomerAlreadyExistsException("Customer with " + customer.getCustomerRef() + " already exists in the database");
+        }
 
         return getCustomer(newCustomerRequest.getCustomerRef());
 
+    }
+
+    /**
+     * Method that will check if a given postcode already exists in the database, if it not exists it will create a new one and will save it.
+     * If the location with the given postcode already exists, it will return it.
+     *
+     * @param location is an entity with the customers location information.
+     * @return a location entity.
+     */
+    private Location getOrCreateLocation(Location location) {
+        return locationRepository.findByPostcode(location.getPostcode())
+                .orElseGet(() -> {
+                    locationRepository.save(location);
+                    return location;
+                });
     }
 
     /**

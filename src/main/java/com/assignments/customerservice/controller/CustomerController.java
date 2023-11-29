@@ -1,5 +1,6 @@
 package com.assignments.customerservice.controller;
 
+import com.assignments.customerservice.exception.CustomerAlreadyExistsException;
 import com.assignments.customerservice.exception.CustomerDoesNotExistException;
 import com.assignments.customerservice.service.CustomerService;
 import com.assignments.customerservice.dto.NewCustomerDto;
@@ -24,7 +25,8 @@ public class CustomerController {
      *
      * @param newCustomer is the request body which contains all the information about the costumer to be added.
      * @return the information of the added customer with a Created status if the process of saving the customer in the database
-     * was successfully or returns a Not Found status if a problem occurred during this process.
+     * was successfully, or returns a Not Found status if a problem occurred during this process or returns a Bad request status if
+     * the customer already exists in the database.
      */
     @RequestMapping(value = "/newCustomer")
     @PostMapping
@@ -35,8 +37,9 @@ public class CustomerController {
             newCustomerDto = customerService.addNewCustomer(newCustomer);
         } catch (CustomerDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CustomerAlreadyExistsException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity<>(newCustomerDto, HttpStatus.CREATED);
     }
 
