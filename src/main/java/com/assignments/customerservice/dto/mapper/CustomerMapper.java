@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 public class CustomerMapper {
 
 
+    /**
+     * Method that receives a Customer entity and maps the information to create an object of type NewCustomerDto.
+     *
+     * @param customer is the entity.
+     * @return an object of type NewCustomerDto.
+     */
     public NewCustomerDto toNewCustomerDto(Customer customer) {
         Location location = customer.getLocation();
         return new NewCustomerDto(customer.getCustomerRef(), customer.getCustomerName(), customer.getAddressLine1(),
@@ -17,6 +23,12 @@ public class CustomerMapper {
 
     }
 
+    /**
+     * Method that receives an object of type NewCustomerRequest and maps the information to create an entity.
+     *
+     * @param newCustomerRequest is the request body that is passed when there is a request to add a new customer.
+     * @return an entity of type Customer.
+     */
     public Customer toCustomer(NewCustomerRequest newCustomerRequest) {
         Customer customer = new Customer();
         customer.setCustomerRef(newCustomerRequest.getCustomerRef());
@@ -26,6 +38,12 @@ public class CustomerMapper {
         return customer;
     }
 
+    /**
+     * Method that receives an object of type NewCustomerRequest and maps the information to create an entity.
+     *
+     * @param newCustomerRequest is the request body that is passed when there is a request to add a new customer.
+     * @return an entity of type Location.
+     */
     public Location toLocation(NewCustomerRequest newCustomerRequest) {
         Location location = new Location();
         location.setTown(newCustomerRequest.getTown());

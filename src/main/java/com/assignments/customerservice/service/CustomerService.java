@@ -27,6 +27,14 @@ public class CustomerService {
     private CustomerMapper customerMapper;
 
 
+    /**
+     * Method that receives the information about a new customer, it maps the information to create the necessary entities
+     * to be saved in the database.
+     *
+     * @param newCustomerRequest is the object that contains the information about the new customer.
+     * @return the information about the saved customer.
+     * @throws CustomerDoesNotExistException is thrown if there is a problem during the process of saving a customer in the database.
+     */
     @Transactional
     public NewCustomerDto addNewCustomer(NewCustomerRequest newCustomerRequest) throws CustomerDoesNotExistException {
         Customer customer = customerMapper.toCustomer(newCustomerRequest);
@@ -46,11 +54,18 @@ public class CustomerService {
 
     }
 
+    /**
+     * Method that receives a customer reference and checks the database to see if the user exists.
+     *
+     * @param customerRef is a unique identifier.
+     * @return the information about the customer with the given customer reference.
+     * @throws CustomerDoesNotExistException is thrown if the customer reference does not exist in the database.
+     */
     public NewCustomerDto getCustomer(String customerRef) throws CustomerDoesNotExistException {
 
         Customer savedCustomer = customerRepository.findByCustomerRef(customerRef);
 
-        if(savedCustomer==null){
+        if (savedCustomer == null) {
             throw new CustomerDoesNotExistException("Can not find customer with" + customerRef);
         }
 
