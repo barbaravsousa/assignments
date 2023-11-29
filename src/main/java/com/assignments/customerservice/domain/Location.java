@@ -11,7 +11,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table( name = "location")
+@Table(name = "location",
+        indexes = {@Index(name = "idx_postcode", columnList = "postcode", unique = true)})
 public class Location {
 
     @Id
@@ -22,8 +23,5 @@ public class Location {
     String county;
     String country;
     String postcode;
-
-    @OneToMany(mappedBy = "location")
-    private Set<Customer> customers = new HashSet<>();
 
 }

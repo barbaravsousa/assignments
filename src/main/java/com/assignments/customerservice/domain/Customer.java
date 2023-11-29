@@ -9,13 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "customer")
+@Table(name = "customer",
+        indexes = {@Index(name = "idx_customerRef", columnList = "customerRef", unique = true)})
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(unique = true)
     String customerRef;
     String customerName;
     String addressLine1;
