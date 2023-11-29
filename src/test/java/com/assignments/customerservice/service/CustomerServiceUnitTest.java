@@ -33,6 +33,12 @@ public class CustomerServiceUnitTest {
     private final String country = "UK";
     private final String postcode = "NW9";
 
+    private final NewCustomerRequest newCustomerRequest = new NewCustomerRequest(customerRef, customerName, addressLine1, addressLine2,
+            town, county, country, postcode);
+
+    private final NewCustomerDto expectedNewCustomerDto = new NewCustomerDto(customerRef, customerName, addressLine1, addressLine2, town,
+            county, country, postcode);
+
     @InjectMocks
     CustomerService customerService;
 
@@ -63,13 +69,6 @@ public class CustomerServiceUnitTest {
         location.setCountry(country);
         location.setPostcode(postcode);
 
-
-        NewCustomerRequest newCustomerRequest = new NewCustomerRequest(customerRef, customerName, addressLine1, addressLine2,
-                town, county, country, postcode);
-
-        NewCustomerDto expectedNewCustomerDto = new NewCustomerDto(customerRef, customerName, addressLine1, addressLine2, town,
-                county, country, postcode);
-
         when(customerMapper.toCustomer(newCustomerRequest)).thenReturn(customer);
         when(customerMapper.toLocation(newCustomerRequest)).thenReturn(location);
 
@@ -87,7 +86,6 @@ public class CustomerServiceUnitTest {
         verify(locationRepository, times(1)).save(location);
 
     }
-
 
     @Test
     void getCustomer() throws CustomerDoesNotExistException {
@@ -109,9 +107,6 @@ public class CustomerServiceUnitTest {
         customer.setLocation(location);
         location.setCustomers(customers);
 
-        NewCustomerDto expectedNewCustomerDto = new NewCustomerDto(customerRef, customerName, addressLine1, addressLine2, town,
-                county, country, postcode);
-
         when(customerRepository.findByCustomerRef(customerRef)).thenReturn(customer);
 
         when(customerMapper.toNewCustomerDto(customer)).thenReturn(expectedNewCustomerDto);
@@ -123,7 +118,7 @@ public class CustomerServiceUnitTest {
     }
 
     @Test
-    void getCostumer_CustomerNotFound(){
+    void getCostumer_CustomerNotFound() {
 
         when(customerRepository.findByCustomerRef(customerRef)).thenReturn(null);
 
@@ -133,6 +128,8 @@ public class CustomerServiceUnitTest {
 
         String exceptionMessage = exception.getMessage();
 
-        assertEquals(expectedMessage,exceptionMessage);
+        assertEquals(expectedMessage, exceptionMessage);
     }
+
+
 }
