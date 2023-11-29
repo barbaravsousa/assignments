@@ -1,8 +1,10 @@
 package com.assignments.customerservice.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class NewCustomerDto {
     private String customerRef;
     private String customerName;

@@ -5,17 +5,17 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table ( name = "customer")
+@Table(name = "customer")
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+    @Column(unique = true)
     String customerRef;
     String customerName;
     String addressLine1;
